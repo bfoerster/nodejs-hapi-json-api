@@ -1,1 +1,1 @@
-This is just a playground for node.js and JSON API
+This is just a playground for Hapi and JSON API

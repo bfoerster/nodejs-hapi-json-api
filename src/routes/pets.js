@@ -1,27 +1,31 @@
 const Joi = require('joi');
 const _ = require('underscore');
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
+const JSONAPIDeserializer = require('jsonapi-serializer').Deserializer;
 
 const opts = {
     attributes: ['id', 'name', 'category']
 };
 const serializer = new JSONAPISerializer('pets', opts);
+const deserializer = new JSONAPIDeserializer(opts);
 
-module.exports = [{
-    method: 'GET',
-    path: '/pets',
+const allPets = [];
 
-    config: {
-        handler: (request, reply) => {
-            const allPets = _.range(0, 10, 1).map((id) => createPet(id, 'Bodo', 'Dackel'));
-            const response = serializer.serialize({pets: allPets});
-            return reply(response);
-        },
-        description: 'Get All Pets',
-        notes: 'Returns a list including all pets available',
-        tags: ['api']
-    }
-},
+module.exports = [
+    {
+        method: 'GET',
+        path: '/pets',
+
+        config: {
+            handler: (request, reply) => {
+                const response = serializer.serialize(allPets);
+                return reply(response);
+            },
+            description: 'Get All Pets',
+            notes: 'Returns a list including all pets available',
+            tags: ['api']
+        }
+    },
     {
         method: 'GET',
         path: '/pets/{id}',
@@ -42,6 +46,25 @@ module.exports = [{
                         .description('The pets id'),
                 }
             }
+        }
+    },
+    {
+        method: 'POST',
+        path: '/pets',
+
+        config: {
+            handler: (request, reply) => {
+                const body = request.payload;
+
+                deserializer.deserialize(body).then((pet) => {
+                    allPets.push(pet);
+                    const response = serializer.serialize(pet);
+                    return reply(response);
+                });
+            },
+            description: 'POST a new Pet',
+            notes: 'Creates a new pet',
+            tags: ['api']
         }
     }
 ];
