@@ -1,5 +1,11 @@
 const Joi = require('joi');
 const _ = require('underscore');
+const JSONAPISerializer = require('jsonapi-serializer').Serializer;
+
+const opts = {
+    attributes: ['id', 'name', 'category']
+};
+const serializer = new JSONAPISerializer('pets', opts);
 
 module.exports = [{
     method: 'GET',
@@ -8,7 +14,8 @@ module.exports = [{
     config: {
         handler: (request, reply) => {
             const allPets = _.range(0, 10, 1).map((id) => createPet(id, 'Bodo', 'Dackel'));
-            return reply({pets: allPets});
+            const response = serializer.serialize({pets: allPets});
+            return reply(response);
         },
         description: 'Get All Pets',
         notes: 'Returns a list including all pets available',
@@ -22,7 +29,8 @@ module.exports = [{
         config: {
             handler: (request, reply) => {
                 const id = request.params.id;
-                return reply(createPet(id, 'Bodo', 'Dackel'));
+                const response = serializer.serialize(createPet(id, 'Bodo', 'Dackel'));
+                return reply(response);
             },
             description: 'Get A Pet By Id',
             notes: 'Returns a single pet',
@@ -35,7 +43,8 @@ module.exports = [{
                 }
             }
         }
-    }];
+    }
+];
 
 
 function createPet(id, name, category) {

@@ -14,11 +14,11 @@
     "url": "https://github.com/bfoerster/nodejs-hapi-json-api/issues"
   },
   "dependencies": {
-    "@gar/hapi-json-api": "^2.0.3",
     "hapi": "^16.5.2",
     "hapi-swagger": "^7.7.0",
     "inert": "^4.2.1",
     "joi": "^10.6.0",
+    "jsonapi-serializer": "^3.5.5",
     "underscore": "^1.8.3",
     "vision": "^4.1.1"
   }

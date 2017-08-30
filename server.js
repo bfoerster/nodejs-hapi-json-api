@@ -3,7 +3,6 @@ const Hapi = require('hapi');
 const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
-const HapiJsonApi = require('@gar/hapi-json-api');
 
 const PetRoute = require('./src/routes/pets');
 
@@ -21,10 +20,6 @@ const options = {
 };
 
 server.register([
-        {
-            register: HapiJsonApi,
-            options: {}
-        },
         Inert,
         Vision,
         {
